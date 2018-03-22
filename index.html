@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GifTastic</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+</head>
+<body>
+
+<div class="container">
+    <h1>SpOrTz</h1>
+
+    <div id="buttons-view"></div>
+
+
+    <form id="sport-form">
+        <label for="sport-input">Add a SpOrTz CiTy</label>
+        <input type="text" id="sport-input">
+        <br>
+
+        <input id="add-sport" type="submit" value="Add a SpOrTz CiTy">
+    </form>
+
+    <div id="sports-view"></div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        // Initial array of movies
+        var sports = ["Philadelphia", "Atlanta", "Boston", "Los Angeles"];
+
+        // displaySportGif function re-renders the HTML to display the appropriate content
+        function displaySportGif() {
+
+            var sports = $(this).attr("data-name");
+            var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=KLwMBhH7NFrZoJeJYNNOVQP77OcfIV71&q="
+                + sports +
+                "&limit=10&offset=0&rating=PG&lang=en";
+
+            // Creating an AJAX call for the specific sport button being clicked
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function(response) {
+                var results = response.data;
+
+                for (var i = 0; i < results.length; i++) {
+
+
+
+                    // Creating a div to hold the sport
+                    var sportDiv = $("<div class='sports'>");
+
+
+                    // Creating an element to have the rating displayed
+                    var pOne = $("<p>").text("Rating: " + results[i].rating);
+
+                    var sportImage = $("<img>");
+                    sportImage.attr("src", results[i].images.fixed_height.url);
+
+                    // Displaying the rating
+                    sportDiv.append(pOne);
+                    sportDiv.append(sportImage);
+
+                    // Putting the entire sport above the previous sport
+                    $("#sports-view").prepend(sportDiv);
+                }
+
+
+            });
+
+        }
+
+        // Function for displaying movie data
+        function renderButtons() {
+
+            // Deleting the sports prior to adding new sport
+            // (this is necessary otherwise you will have repeat buttons)
+            $("#buttons-view").empty();
+
+
+            // Looping through the array of sports
+            for (var i = 0; i < sports.length; i++) {
+
+                // Then dynamicaly generating buttons for each movie in the array
+                // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+                var a = $("<button>");
+                // Adding a class of sport-btn to our button
+                a.addClass("sport-btn");
+                // Adding a data-attributes
+                a.attr("data-name", sports[i]);
+                // Providing the initial button text
+                a.text(sports[i]);
+                // Adding the button to the buttons-view div
+                $("#buttons-view").append(a);
+            }
+        }
+
+        // This function handles events where a sport button is clicked
+        $("#add-sport").on("click", function(event) {
+            event.preventDefault();
+            // This line grabs the input from the textbox
+            var sport = $("#sport-input").val().trim();
+
+            // Adding movie from the textbox to our array
+            sports.push(sport);
+
+            // Calling renderButtons which handles the processing of our sport array
+            renderButtons();
+        });
+
+        // $(document).on("click", ".sports-btn", function() {
+        //     var state = $(this).attr("data-state");
+        //
+        //     if (state === "still") {
+        //         $(this).attr("src", $(this).attr("data-animate"));
+        //         $(this).attr("data-state", "animate");
+        //     } else {
+        //         $(this).attr("src", $(this).attr("data-still"));
+        //         $(this).attr("data-state", "still");
+        //     }
+        // });
+
+        // Adding a click event listener to all elements with a class of "sport-btn"
+        $(document).on("click", ".sport-btn", displaySportGif);
+
+        // Calling the renderButtons function to display the intial buttons
+        renderButtons();
+
+    </script>
+
+
+
+
+
+
+
+
+
+</div>
+
+</body>
+</html>
