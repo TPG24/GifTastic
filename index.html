@@ -5,46 +5,76 @@
     <title>GifTastic</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/style.css">
+
+
 
 
 </head>
 <body>
 
-<div class="container">
-    <h1>SpOrTz</h1>
+<div class="jumbotron-fluid background py-5">
+    <div class="container">
+        <div class="row align-items center">
+            <div class="col-12 col-md-12 text-center my-4">
+                <h1><strong>GifTastic Sports City</strong></h1>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="container">
+
+<div class="row align-items center">
+    <div class="col-12 col-md-12 text-center py4">
     <div id="buttons-view"></div>
 
 
     <form id="sport-form">
-        <label for="sport-input">Add a SpOrTz CiTy</label>
+        <label for="sport-input"><span>Add Sports City</span></label>
         <input type="text" id="sport-input">
         <br>
 
-        <input id="add-sport" type="submit" value="Add a SpOrTz CiTy">
+        <input id="add-sport" type="submit" value="SPORTS">
     </form>
-
+    </div>
+</div>
+    <div class="row align-items-center">
+        <div class="col-12 col-md-12 text-center">
     <div id="sports-view"></div>
-
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
         // Initial array of movies
         var sports = ["Philadelphia", "Atlanta", "Boston", "Los Angeles"];
 
+        $(document).on("click", ".sports", function() {
+            var state = $(this).attr("data-status");
+
+            if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                $(this).attr("data-status", "animate");
+            } else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-status", "still");
+            }
+        });
         // displaySportGif function re-renders the HTML to display the appropriate content
         function displaySportGif() {
 
             var sports = $(this).attr("data-name");
             var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=KLwMBhH7NFrZoJeJYNNOVQP77OcfIV71&q="
                 + sports +
-                "&limit=10&offset=0&rating=PG&lang=en";
+                "_sports&limit=10&offset=0&rating=PG&lang=en";
 
             // Creating an AJAX call for the specific sport button being clicked
             $.ajax({
                 url: queryURL,
                 method: "GET"
             }).then(function(response) {
+                console.log(response);
                 var results = response.data;
 
                 for (var i = 0; i < results.length; i++) {
@@ -58,8 +88,11 @@
                     // Creating an element to have the rating displayed
                     var pOne = $("<p>").text("Rating: " + results[i].rating);
 
-                    var sportImage = $("<img>");
-                    sportImage.attr("src", results[i].images.fixed_height.url);
+                    var sportImage = $("<img class = 'sports'>");
+                    sportImage.attr("src", results[i].images.fixed_height_still.url);
+                    sportImage.attr("data-still", results[i].images.fixed_height_still.url);
+                    sportImage.attr("data-animate", results[i].images.fixed_height.url);
+                    sportImage.attr("data-status", "still");
 
                     // Displaying the rating
                     sportDiv.append(pOne);
@@ -67,7 +100,9 @@
 
                     // Putting the entire sport above the previous sport
                     $("#sports-view").prepend(sportDiv);
+
                 }
+
 
 
             });
@@ -105,24 +140,15 @@
             // This line grabs the input from the textbox
             var sport = $("#sport-input").val().trim();
 
-            // Adding movie from the textbox to our array
+            // Adding sport from the textbox to our array
             sports.push(sport);
 
             // Calling renderButtons which handles the processing of our sport array
             renderButtons();
+            $("#sport-input").val("");
         });
 
-        // $(document).on("click", ".sports-btn", function() {
-        //     var state = $(this).attr("data-state");
-        //
-        //     if (state === "still") {
-        //         $(this).attr("src", $(this).attr("data-animate"));
-        //         $(this).attr("data-state", "animate");
-        //     } else {
-        //         $(this).attr("src", $(this).attr("data-still"));
-        //         $(this).attr("data-state", "still");
-        //     }
-        // });
+
 
         // Adding a click event listener to all elements with a class of "sport-btn"
         $(document).on("click", ".sport-btn", displaySportGif);

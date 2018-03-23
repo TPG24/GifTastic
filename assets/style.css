@@ -1,0 +1,17 @@
+h1 {
+    font-family: "Lucida Grande";
+}
+
+#buttons-view {
+    font-family: "Lucida Grande";
+    border-color: black 2px;
+}
+
+span {
+    font-family: "Lucida Grande";
+
+}
+
+body {
+    background-image: url("hand-holding-trophy.jpg");
+}
