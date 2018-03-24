@@ -4,7 +4,7 @@ h1 {
 
 #buttons-view {
     font-family: "Lucida Grande";
-    border-color: black 2px;
+    border: black 2px;
 }
 
 span {
